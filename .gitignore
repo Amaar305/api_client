@@ -1,0 +1,17 @@
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+doc/api/
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+.vscode/
+*.dart.js
+*.info.json
+*.js
+*.js_
+*.js.deps
+*.js.map
+.DS_Store
