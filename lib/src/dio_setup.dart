@@ -1,7 +1,7 @@
+import 'package:api_client/src/error_mapping_interceptor.dart';
+import 'package:api_client/src/token_interceptor.dart';
+import 'package:api_client/src/token_repository.dart';
 import 'package:dio/dio.dart';
-import 'token_interceptor.dart';
-import 'token_repository.dart';
-import 'error_mapping_interceptor.dart';
 
 Dio buildApiClient({
   required String baseUrl,
@@ -10,11 +10,13 @@ Dio buildApiClient({
   Duration connectTimeout = const Duration(seconds: 15),
   Duration receiveTimeout = const Duration(seconds: 20),
 }) {
-  final dio = Dio(BaseOptions(
-    baseUrl: baseUrl,
-    connectTimeout: connectTimeout,
-    receiveTimeout: receiveTimeout,
-  ));
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: connectTimeout,
+      receiveTimeout: receiveTimeout,
+    ),
+  );
 
   dio.interceptors.addAll([
     TokenInterceptor(

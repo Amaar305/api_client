@@ -29,10 +29,8 @@ class JwtUtils {
         break;
       case 2:
         output += '==';
-        break;
       case 3:
         output += '=';
-        break;
       default:
         throw const FormatException('Invalid Base64Url');
     }

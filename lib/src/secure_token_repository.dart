@@ -1,6 +1,6 @@
+import 'package:api_client/src/jwt_utils.dart';
+import 'package:api_client/src/token_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'jwt_utils.dart';
-import 'token_repository.dart';
 
 class SecureTokenRepository implements TokenRepository {
   SecureTokenRepository({
@@ -48,13 +48,17 @@ class SecureTokenRepository implements TokenRepository {
   }
 
   @override
-  Future<bool> isAccessExpired({Duration skew = const Duration(seconds: 30)}) async {
+  Future<bool> isAccessExpired({
+    Duration skew = const Duration(seconds: 30),
+  }) async {
     final t = await getAccessToken();
     return _isExpiredToken(t, skew);
   }
 
   @override
-  Future<bool> isRefreshExpired({Duration skew = const Duration(seconds: 30)}) async {
+  Future<bool> isRefreshExpired({
+    Duration skew = const Duration(seconds: 30),
+  }) async {
     final t = await getRefreshToken();
     return _isExpiredToken(t, skew);
   }

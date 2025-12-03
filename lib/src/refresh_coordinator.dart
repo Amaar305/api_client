@@ -10,17 +10,18 @@ class RefreshCoordinator {
     if (_inflight != null) return _inflight!;
 
     final completer = Completer<void>();
-    _inflight = action().then((_) {
-      completer.complete();
-    }).catchError((err, st) {
-      completer.completeError(err, st);
-    }).whenComplete(() {
-      _inflight = null;
-      for (final w in _waiters) {
-        w.complete();
-      }
-      _waiters.clear();
-    });
+    _inflight = action()
+        .then((_) {
+          completer.complete();
+        })
+        .catchError(completer.completeError)
+        .whenComplete(() {
+          _inflight = null;
+          for (final w in _waiters) {
+            w.complete();
+          }
+          _waiters.clear();
+        });
 
     return _inflight!;
   }

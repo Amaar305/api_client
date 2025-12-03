@@ -1,6 +1,6 @@
+import 'package:api_client/src/app_error.dart';
+import 'package:api_client/src/drf_error_parser.dart';
 import 'package:dio/dio.dart';
-import 'app_error.dart';
-import 'drf_error_parser.dart';
 
 class DioErrorMapper {
   static AppError fromDio(Object error) {

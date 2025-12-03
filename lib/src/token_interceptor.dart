@@ -1,6 +1,6 @@
+import 'package:api_client/src/refresh_coordinator.dart';
+import 'package:api_client/src/token_repository.dart';
 import 'package:dio/dio.dart';
-import 'refresh_coordinator.dart';
-import 'token_repository.dart';
 
 class TokenInterceptor extends Interceptor {
   TokenInterceptor({
@@ -27,7 +27,9 @@ class TokenInterceptor extends Interceptor {
 
   @override
   Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final requiresToken = options.extra[_requiresTokenKey] as bool? ?? true;
 
     if (requiresToken && !_isRefreshCall(options)) {
@@ -42,8 +44,9 @@ class TokenInterceptor extends Interceptor {
             refreshEndpoint,
             data: {'refresh': rt},
             options: Options(
-                extra: {_requiresTokenKey: false},
-                headers: {'Authorization': ''}),
+              extra: {_requiresTokenKey: false},
+              headers: {'Authorization': ''},
+            ),
           );
           final newAccess = (res.data?['access'] as String?)?.trim();
           if (newAccess != null && newAccess.isNotEmpty) {
@@ -67,7 +70,9 @@ class TokenInterceptor extends Interceptor {
 
   @override
   Future<void> onError(
-      DioException err, ErrorInterceptorHandler handler) async {
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     final status = err.response?.statusCode ?? 0;
     final req = err.requestOptions;
 
@@ -107,8 +112,9 @@ class TokenInterceptor extends Interceptor {
           refreshEndpoint,
           data: {'refresh': rt},
           options: Options(
-              extra: {_requiresTokenKey: false},
-              headers: {'Authorization': ''}),
+            extra: {_requiresTokenKey: false},
+            headers: {'Authorization': ''},
+          ),
         );
 
         final newAccess = (res.data?['access'] as String?)?.trim();
@@ -135,7 +141,7 @@ class TokenInterceptor extends Interceptor {
         req.headers.remove('Authorization');
       }
 
-      final response = await dio.fetch(req);
+      final response = await dio.fetch<dynamic>(req);
       handler.resolve(response);
     } catch (refreshErr, _) {
       _coord.failAll(refreshErr);

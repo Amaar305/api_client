@@ -1,5 +1,5 @@
 import 'package:api_client/api_client.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 void main() async {
   final client = ApiClient(
@@ -17,17 +17,23 @@ void main() async {
         'action_type': 'website',
         'target_audience_id': 1,
         'products': [
-          {'id': 42, 'name': 'Sample'}
+          {'id': 42, 'name': 'Sample'},
         ],
       },
     );
-    print('OK ${res.data}');
+    if (kDebugMode) {
+      print('OK ${res.data}');
+    }
   } on DioException catch (e) {
     final err = e.error;
     if (err is AppError) {
-      print('AppError: ${err.message} (${err.statusCode})');
+      if (kDebugMode) {
+        print('AppError: ${err.message} (${err.statusCode})');
+      }
     } else {
-      print('Unhandled: ${e.message}');
+      if (kDebugMode) {
+        print('Unhandled: ${e.message}');
+      }
     }
   }
 }

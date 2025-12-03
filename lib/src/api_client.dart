@@ -1,8 +1,7 @@
+import 'package:api_client/src/dio_setup.dart';
+import 'package:api_client/src/secure_token_repository.dart';
+import 'package:api_client/src/token_repository.dart';
 import 'package:dio/dio.dart';
-
-import 'dio_setup.dart';
-import 'secure_token_repository.dart';
-import 'token_repository.dart';
 
 /// Convenience wrapper that wires up [Dio] with sensible defaults so that
 /// callers can just do `ApiClient(baseUrl: ...).dio.get(...)`.
@@ -29,7 +28,10 @@ class ApiClient {
     );
 
     return ApiClient._(
-        dio: client, baseUrl: normalizedBaseUrl, repository: repo);
+      dio: client,
+      baseUrl: normalizedBaseUrl,
+      repository: repo,
+    );
   }
 
   ApiClient._({
