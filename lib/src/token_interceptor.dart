@@ -116,8 +116,10 @@ class TokenInterceptor extends Interceptor {
             headers: {'Authorization': ''},
           ),
         );
-
-        final newAccess = (res.data?['access'] as String?)?.trim();
+        final data = res.data;
+        final newAccess = ((data?['access'] as String?) ??
+                (data?['data']?['access'] as String?))
+            ?.trim();
         if (newAccess == null || newAccess.isEmpty) {
           throw DioException(
             requestOptions: req,

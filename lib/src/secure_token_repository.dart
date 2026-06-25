@@ -1,50 +1,36 @@
 import 'package:api_client/src/jwt_utils.dart';
 import 'package:api_client/src/token_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureTokenRepository implements TokenRepository {
   SecureTokenRepository({
-    SharedPreferences? preferences,
+    FlutterSecureStorage? storage,
     this.accessKey = 'auth.access',
     this.refreshKey = 'auth.refresh',
-  }) : _preferences = preferences;
+  }) : _storage = storage ?? const FlutterSecureStorage();
 
-  SharedPreferences? _preferences;
+  final FlutterSecureStorage _storage;
   final String accessKey;
   final String refreshKey;
 
-  Future<SharedPreferences> _prefs() async =>
-      _preferences ??= await SharedPreferences.getInstance();
+  @override
+  Future<String?> getAccessToken() => _storage.read(key: accessKey);
 
   @override
-  Future<String?> getAccessToken() async {
-    final prefs = await _prefs();
-    return prefs.getString(accessKey);
-  }
+  Future<String?> getRefreshToken() => _storage.read(key: refreshKey);
 
   @override
-  Future<String?> getRefreshToken() async {
-    final prefs = await _prefs();
-    return prefs.getString(refreshKey);
-  }
+  Future<void> saveAccessToken(String token) =>
+      _storage.write(key: accessKey, value: token);
 
   @override
-  Future<void> saveAccessToken(String token) async {
-    final prefs = await _prefs();
-    await prefs.setString(accessKey, token);
-  }
-
-  @override
-  Future<void> saveRefreshToken(String token) async {
-    final prefs = await _prefs();
-    await prefs.setString(refreshKey, token);
-  }
+  Future<void> saveRefreshToken(String token) =>
+      _storage.write(key: refreshKey, value: token);
 
   @override
   Future<void> clearTokens() async {
-    final prefs = await _prefs();
-    await prefs.remove(accessKey);
-    await prefs.remove(refreshKey);
+    await _storage.delete(key: accessKey);
+    await _storage.delete(key: refreshKey);
   }
 
   @override
